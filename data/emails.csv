@@ -1,0 +1,11 @@
+email,label
+"Congratulations! You have won a free iPhone. Click here now.",spam
+"Meeting has been moved to 3 PM tomorrow.",not_spam
+"Limited time offer! Claim your prize now.",spam
+"Can you send me yesterday's lecture notes?",not_spam
+"URGENT! Verify your bank account immediately.",spam
+"Don't forget our dinner tonight.",not_spam
+"Earn $5000 per week from home.",spam
+"The assignment deadline is Friday.",not_spam
+"Exclusive deal just for you!",spam
+"Happy Birthday! Have a wonderful day.",not_spam
