@@ -141,7 +141,7 @@ Responsibilities:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/simple-spam-classifier.git
+git clone https://github.com/Arashebik/spam-email-classifier.git
 cd simple-spam-classifier
 ```
 
