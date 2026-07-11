@@ -1,39 +1,63 @@
+from pathlib import Path
+
 import pandas as pd
 
 
-df = pd.read_csv("data/emails.csv")
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATASET_PATH = BASE_DIR / "data" / "emails.csv"
 
-# Show first rows
-print(df.head())
 
-# Dataset information
-print("\nDataset Info")
-print(df.info())
+def load_dataset() -> pd.DataFrame:
+    """
+    Load the dataset from data/emails.csv.
+    """
 
-# Check missing values
-print("\nMissing Values")
-print(df.isnull().sum())
+    if not DATASET_PATH.exists():
+        raise FileNotFoundError(
+            f"Dataset not found: {DATASET_PATH}"
+        )
 
-# Check duplicate rows
-print("\nDuplicate Rows")
-print(df.duplicated().sum())
+    df = pd.read_csv(DATASET_PATH)
 
-# Label distribution
-print("\nLabel Distribution")
-print(df["label"].value_counts())
+    return df
 
-# ==========================================
-# Data Cleaning
-# ==========================================
 
-# Remove rows with missing values
-df = df.dropna()
+def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Perform basic cleaning on the dataset.
+    """
 
-# Remove duplicate rows
-df = df.drop_duplicates()
+    df = df.dropna(subset=["email", "label"])
 
-# Standardize labels
-df["label"] = df["label"].str.lower().str.strip()
+    df = df.drop_duplicates(subset="email")
 
-print(df.info())
-print(df.head())
+    df["email"] = df["email"].astype(str).str.strip()
+
+    df["label"] = (
+        df["label"]
+        .astype(str)
+        .str.lower()
+        .str.strip()
+    )
+
+    # Remove very short emails
+    df = df[df["email"].str.len() > 20]
+
+    # Keep only valid labels
+    df = df[df["label"].isin(["spam", "ham"])]
+
+    df = df.reset_index(drop=True)
+
+    return df
+
+
+def load_and_clean_dataset() -> pd.DataFrame:
+    """
+    Convenience function used by train.py.
+    """
+
+    df = load_dataset()
+    df = clean_dataset(df)
+
+    return df
+

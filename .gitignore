@@ -1,2 +1,7 @@
 venv
 test.py
+__pycache__/
+.vscode/
+.idea/
+data/raw/
+models/

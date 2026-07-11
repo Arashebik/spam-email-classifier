@@ -1,34 +1,90 @@
-import pandas as pd
+from pathlib import Path
+
+import joblib
 
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+)
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import MultinomialNB
 
-# Load dataset
-df = pd.read_csv("data/emails.csv")
+from dataloader import load_and_clean_dataset
 
-# Features
-X_text = df["email"]
 
-# Labels
-y = df["label"]
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODELS_DIR = BASE_DIR / "models"
+MODELS_DIR.mkdir(exist_ok=True)
 
-# Text -> Numbers
-vectorizer = CountVectorizer(stop_words="english",lowercase=True)
 
-X = vectorizer.fit_transform(X_text)
+def main():
 
-# Create model
-model = MultinomialNB()
+    print("[1/6] Loading dataset...")
 
-# Train model
-model.fit(X, y)
+    df = load_and_clean_dataset()
 
-new_email = [
-    "Congratulations! You have won free money."
-]
+    X_text = df["email"]
+    y = df["label"]
 
-X_new = vectorizer.transform(new_email)
+    print(f"Total emails: {len(df)}")
 
-prediction = model.predict(X_new)
+    print("\n[2/6] Splitting dataset...")
 
-print(prediction)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_text,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y,
+    )
+
+    print("[3/6] Building pipeline...")
+
+    pipeline = Pipeline(
+        [
+            (
+                "vectorizer",
+                CountVectorizer(
+                    lowercase=True,
+                    stop_words="english",
+                ),
+            ),
+            (
+                "classifier",
+                MultinomialNB(),
+            ),
+        ]
+    )
+
+    print("[4/6] Training model...")
+
+    pipeline.fit(X_train, y_train)
+
+    print("[5/6] Evaluating model...")
+
+    y_pred = pipeline.predict(X_test)
+
+    print(f"\nAccuracy: {accuracy_score(y_test, y_pred):.4f}\n")
+
+    print("Classification Report")
+    print(classification_report(y_test, y_pred))
+
+    print("Confusion Matrix")
+    print(confusion_matrix(y_test, y_pred))
+
+    print("\n[6/6] Saving model...")
+
+    joblib.dump(
+        pipeline,
+        MODELS_DIR / "spam_classifier.pkl",
+    )
+
+    print("\nTraining completed successfully!")
+    print(f"Model saved to: {MODELS_DIR / 'spam_classifier.pkl'}")
+
+
+if __name__ == "__main__":
+    main()
