@@ -65,7 +65,7 @@ def read_folder(folder: Path, label: str):
     return rows
 
 
-def main():
+def create_dataset_main():
 
     dataset = []
 
@@ -84,7 +84,3 @@ def main():
     print(df["label"].value_counts())
     print()
     print(df.head())
-
-
-if __name__ == "__main__":
-    main()

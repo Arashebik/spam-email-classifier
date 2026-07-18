@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import MultinomialNB
 
-from dataloader import load_and_clean_dataset
+from src.dataloader import load_and_clean_dataset
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,7 +84,3 @@ def main():
 
     print("\nTraining completed successfully!")
     print(f"Model saved to: {MODELS_DIR / 'spam_classifier.pkl'}")
-
-
-if __name__ == "__main__":
-    main()

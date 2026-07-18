@@ -11,8 +11,7 @@
 
 ## Overview
 
-This project is a simple ML model for classifying spam and not spam(ham) emails. Sometimes emails 
-contain some spam content and this project diagnose whether an email is spam or not.
+This project is a simple ML model for classifying spam and not spam(ham) emails. Sometimes emails contain some spam content and this project diagnose whether an email is spam or not.
 
 I used Naive Bayes algorithm to train this model. This algorithm is a very popular algorithm for
 text and spam classifying.
@@ -145,32 +144,25 @@ git clone https://github.com/Arashebik/spam-email-classifier.git
 cd simple-spam-classifier
 ```
 
-### 2. Install Dependencies
+### 2. Create venv & Install Dependencies
 
 ```bash
+python -m venv venv # python3 for linux
+.\venv\Scripts\activate  # windows
+source venv/bin/activate  # linux
 pip install -r requirements.txt
 ```
 
 ### 3. Download the dataset (optional)
 
 Download the Apache SpamAssassin Public Corpus (or any compatible raw emails) and extract it into:
-```
+```text
 data/raw
 ```
 
-### 4. Create the Dataset
-```bash
-python src/create_dataset.py
-```
-
-### 5. Train the model
-```bash
-python src/train.py
-```
-
-### 6. Predict new emails
-```bash
-python src/train.py
+### 4. Run the program
+```python
+python main.py
 ```
 
 ## Future Improvements
